@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Admin\Controller;
@@ -20,6 +21,9 @@ class UsersController extends AdminController
      */
     public function index()
     {
+        $this->Prefectures = $this->fetchTable('Prefectures');
+        debug($this->Prefectures);
+
         $users = $this->paginate($this->Users);
 
         $this->set(compact('users'));

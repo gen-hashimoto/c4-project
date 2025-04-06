@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Admin\Controller;
@@ -9,11 +8,21 @@ use Admin\Controller\AppController;
 /**
  * Users Controller
  *
- * @property \Admin\Model\Table\UsersTable $Users
- * @method \Admin\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @property \App\Model\Table\UsersTable $Users * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class UsersController extends AdminController
 {
+    /**
+     * Initialize controller
+     *
+     * @return void
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->Users = $this->fetchTable('Users');
+    }
+
     /**
      * Index method
      *
@@ -21,8 +30,8 @@ class UsersController extends AdminController
      */
     public function index()
     {
-        $this->Prefectures = $this->fetchTable('Prefectures');
-        debug($this->Prefectures);
+        debug($this->Users);
+        debug($this->Users->find()->all());
 
         $users = $this->paginate($this->Users);
 
@@ -39,7 +48,7 @@ class UsersController extends AdminController
     public function view($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => ['LoginHistorys'],
+            'contain' => [],
         ]);
 
         $this->set(compact('user'));

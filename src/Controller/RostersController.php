@@ -115,8 +115,40 @@ class RostersController extends AppController
      */
     public function stamp(){
         if($this->request->is(['patch','post','put'])){
-            $account=$this->
+            $account=$this->request->getData('account');
+            $kubun = $this->request->getData('kubun');
 
+            // エンティティにpatchするための配列
+            $tmpArr= array();
+            $msg = "";
+
+            // 区分から出勤、退勤時刻を判断し日時を取得する
+            if($kubun == 'sta'){
+                $tmpArr['start_time'] = FrozenTime::now();
+                $msg = "おはようございます。";
+            }else if($kubun == 'end'){
+                $tmpArr['end_time'] = FrozenTime::now();
+                $msg = "お疲れ様でした。";
+            }
+
+            // accountからユーザIDを取得する
+            $this->Users = $this->fetchTable('Users');
+            $user = $this->Users->find()->where(['account' => $account])->first();
+
+            // ユーザー情報が取得出来たら打刻する
+            if($user){
+                $tmpArr['user_id'] = $user->id;
+
+                $roster = $this->Rosters->newEmptyEntity();
+                $roster = $this->Rosters->patchEntity($roster, $tmpArr);
+
+                if($this->Rosters->save($roster)){
+                    $this->Flash->success($msg);
+                }else{
+                    $this->Flash->error('入力されたアカウントが存在しません。');
+                }
+
+            }
         }
         $this->render("stamp","roster");
     }

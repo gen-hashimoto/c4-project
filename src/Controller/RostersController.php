@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Event\EventInterface;
 use Cake\I18n\FrozenTime;
 
 /**
@@ -14,6 +15,23 @@ use Cake\I18n\FrozenTime;
  */
 class RostersController extends AppController
 {
+    public function initialize(): void
+    {
+        parent::initialize();
+
+        $this->loadComponent('Authentication.Authentication');
+    }
+
+    /**
+     * beforeFilter method
+     *
+     */
+    public function beforeFilter(EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        $this->Authentication->addUnauthenticatedActions(['stamp']);
+    }
+
     /**
      * Index method
      *

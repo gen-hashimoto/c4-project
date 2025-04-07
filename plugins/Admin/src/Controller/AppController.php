@@ -13,8 +13,9 @@ class AppController extends BaseController
         parent::initialize();
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->loadComponent('Authentication.Authentication');
 
         // 認証結果を確認し、サイトのロックを行うために次の行を追加します
-        $this->loadComponent('Authentication.Authentication');
+        // $this->loadComponent('Authentication.Authentication');
     }
 }
